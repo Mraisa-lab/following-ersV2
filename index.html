@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#09101a">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="icon.svg">
+  <title>Instagram Backcheck</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app-shell">
+    <header class="hero-card">
+      <div>
+        <p class="eyebrow">Instagram Backcheck</p>
+        <h1>Deteksi Non-Follow Back</h1>
+        <p>Unggah file export Instagram dan temukan siapa yang tidak follow back atau yang tidak kamu follow back.</p>
+      </div>
+      <div class="header-actions">
+        <button id="themeToggle" class="theme-toggle" title="Beralih mode">☀️</button>
+        <button id="clearButton" class="button button-ghost">Clear Data</button>
+        <button id="downloadLastButton" class="button button-secondary">Load Last Data</button>
+        <button id="installButton" class="button button-primary hidden">Install App</button>
+      </div>
+    </header>
+
+    <section class="upload-panel card">
+      <div class="upload-info">
+        <h2>Upload data Instagram</h2>
+        <p>Tarik & jatuhkan file JSON atau gunakan tombol upload. Dukung <code>following.json</code>, <code>followers_1.json</code>, <code>followers_2.json</code>, dan <code>pending_follow_requests.json</code>.</p>
+      </div>
+
+      <div id="dropZone" class="drop-zone">
+        <p>Drop file di sini</p>
+        <small>Atau klik tombol Upload untuk memilih file.</small>
+      </div>
+
+      <div class="upload-buttons">
+        <label class="button button-primary">Upload Following<input id="fileFollowing" type="file" accept="application/json" hidden></label>
+        <label class="button button-primary">Upload Followers<input id="fileFollowers" type="file" accept="application/json" multiple hidden></label>
+        <label class="button button-secondary">Upload Pending Requests<input id="filePendingRequests" type="file" accept="application/json" hidden></label>
+      </div>
+
+      <div class="progress-bar-wrapper" aria-hidden="true">
+        <div id="progressLabel" class="progress-label">Menunggu file...</div>
+        <div class="progress-bar"><div id="progressFill" class="progress-fill"></div></div>
+      </div>
+    </section>
+
+    <section class="stats-grid" id="statsCards">
+      <article class="stat-card">
+        <div class="stat-title">Followers</div>
+        <div class="stat-value" id="followersCount">0</div>
+      </article>
+      <article class="stat-card">
+        <div class="stat-title">Following</div>
+        <div class="stat-value" id="followingCount">0</div>
+      </article>
+      <article class="stat-card">
+        <div class="stat-title">Not Follow Back</div>
+        <div class="stat-value" id="notFollowBackCount">0</div>
+      </article>
+      <article class="stat-card">
+        <div class="stat-title">I Don't Follow Back</div>
+        <div class="stat-value" id="dontFollowCount">0</div>
+      </article>
+      <article class="stat-card" id="pendingStatCard" style="display:none;">
+        <div class="stat-title">Pending Requests</div>
+        <div class="stat-value" id="pendingRequestsCount">0</div>
+      </article>
+    </section>
+
+    <section class="controls-panel card">
+      <div class="control-row">
+        <label class="search-field">
+          <span>Pencarian</span>
+          <input id="searchInput" type="search" placeholder="Cari username...">
+        </label>
+        <label class="select-field">
+          <span>Filter Hasil</span>
+          <select id="limitSelect">
+            <option value="all">Tampilkan Semua</option>
+            <option value="50">Top 50</option>
+            <option value="100">Top 100</option>
+            <option value="200">Top 200</option>
+          </select>
+        </label>
+        <label class="select-field">
+          <span>Urutkan</span>
+          <select id="sortSelect">
+            <option value="az">A-Z</option>
+            <option value="za">Z-A</option>
+          </select>
+        </label>
+      </div>
+      <div class="action-row">
+        <button id="exportCsvButton" class="button button-secondary">Export CSV</button>
+        <button id="exportTxtButton" class="button button-secondary">Export TXT</button>
+      </div>
+    </section>
+
+    <section class="tabs card">
+      <div class="tab-controls">
+        <div class="tab-list" role="tablist" aria-label="Kategori hasil">
+          <button class="tab active" data-tab="notFollowBack" role="tab" aria-selected="true">Not Following Back</button>
+          <button class="tab" data-tab="dontFollowBack" role="tab" aria-selected="false">I Don't Follow Back</button>
+          <button class="tab" data-tab="mutual" role="tab" aria-selected="false">Mutual Followers</button>
+          <button class="tab" data-tab="pending" role="tab" aria-selected="false" id="pendingTab" style="display:none;">Pending Requests</button>
+        </div>
+        <div class="tab-actions">
+          <button id="undoButton" class="button button-ghost" disabled>↶ Undo</button>
+          <button id="redoButton" class="button button-ghost" disabled>↷ Redo</button>
+        </div>
+      </div>
+      <div id="tabContent" class="tab-content"></div>
+    </section>
+
+    <section id="errorMessage" class="card error-card hidden"></section>
+  </div>
+
+</script>
+  <script src="script.js"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('sw.js').catch(() => console.warn('Service worker tidak terdaftar.'));
+      });
+    }
+  </script>
+</body>
+</html>

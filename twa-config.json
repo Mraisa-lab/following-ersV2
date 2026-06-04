@@ -1,0 +1,18 @@
+{
+  "packageId": "com.example.igbackcheck",
+  "host": "REPLACE_WITH_YOUR_HOST_OR_IP",
+  "appName": "Instagram Backcheck",
+  "launcherName": "Backcheck",
+  "themeColor": "#09101a",
+  "backgroundColor": "#09101a",
+  "startUrl": "/",
+  "icon": "icon.svg",
+  "appVersionName": "1.0.0",
+  "appVersionCode": 1,
+  "signing": {
+    "keystorePath": "./keystore.jks",
+    "keystorePassword": "YOUR_KEYSTORE_PASSWORD",
+    "keyAlias": "key0",
+    "keyPassword": "YOUR_KEY_PASSWORD"
+  }
+}
